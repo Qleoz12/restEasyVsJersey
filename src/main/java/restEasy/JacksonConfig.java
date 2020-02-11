@@ -1,5 +1,8 @@
 package restEasy;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -13,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +35,10 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
         //LocalDateTime
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        
+        LocalDateTimeDeserializer localDateTimeDeserializer = new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTimeSerializer localDateTimeSerializer = new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        
         // por si quisieramos modificar el formato de las fechas
         //
         //objectMapper.setDateFormat(new SimpleDateFormat("dd.MM.yyyy"));
@@ -38,6 +47,8 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
         // ahora viene la implementación para filtrar algunas entidades
         // los serializers que se registre son globales
         SimpleModule module = new SimpleModule("RESTModule", new Version(1, 0, 0, null));
+        module.addDeserializer(LocalDateTime.class, localDateTimeDeserializer);
+        module.addSerializer(LocalDateTime.class, localDateTimeSerializer);
 // 		module.addSerializer(Pais.class, new PaisSerializer());
 //        module.addSerializer(Departamento.class, new DepartamentoSerializer());
 //        module.addSerializer(Municipio.class, new MunicipioSerializer());

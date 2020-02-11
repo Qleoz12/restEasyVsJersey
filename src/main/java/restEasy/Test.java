@@ -17,6 +17,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import commons.TurnoPersonaDTOWrapper;
+
 
 
 @Path("/test")
@@ -32,14 +34,14 @@ public class Test {
 		@Path("/tetsPost")
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
-		public Response checkRequest(MultivaluedMap<String, String> map) 
+		public Response checkRequest(TurnoPersonaDTOWrapper model) 
 		{
 			CacheControl cc = new CacheControl();
     	    cc.setMaxAge(86400);
     	    cc.setNoTransform(false);
     	    cc.setPrivate(false);
     	    
-    	    ResponseBuilder builder = Response.ok().entity(map);
+    	    ResponseBuilder builder = Response.ok().entity(model);
     	    builder.cacheControl(cc);
     	    return builder.build();    	    
 		}

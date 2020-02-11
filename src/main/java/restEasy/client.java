@@ -1,4 +1,4 @@
-package services;
+package restEasy;
 
 import javax.ws.rs.client.WebTarget;
 
